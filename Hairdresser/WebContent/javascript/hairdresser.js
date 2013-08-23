@@ -19,38 +19,11 @@ $(document).ready(function() {
     thead.append(row);
 
 	$('#mainDiv').append(table);
-	
-	var priceList;
-	
-	usePost(function(data) {
-		priceList = data.priceList;
 		
-		for(var i=0; i<priceList.length; i++){
-		    row = $('<tr></tr>').addClass('pricelist-row');		
-		    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].category);
-		    row.append(col);
-		    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].name);
-		    row.append(col);
-		    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].price);
-		    row.append(col);		    
-		    tbody.append(row);
-		}
-	});
+// This is only to demo how to use Post	
+//	usePost(buildPriceList);
 	
-	useGet(function(data) {
-		priceList = data;
-		
-		for(var i=0; i<priceList.length; i++){
-		    row = $('<tr></tr>').addClass('pricelist-row');		
-		    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].category);
-		    row.append(col);
-		    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].name);
-		    row.append(col);
-		    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].price);
-		    row.append(col);		    
-		    tbody.append(row);
-		}
-	});
+	useGet(buildPriceList); 
 });
 
 function usePost(callback) {
@@ -84,4 +57,22 @@ function useGet(callback) {
 	    }
 	});
 	
+};
+
+function buildPriceList(priceList) {
+	
+	var tbody = $('.pricelist-table');
+	var row;
+	var col;
+	
+	for(var i=0; i<priceList.length; i++){
+	    row = $('<tr></tr>').addClass('pricelist-row');		
+	    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].category);
+	    row.append(col);
+	    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].name);
+	    row.append(col);
+	    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].price);
+	    row.append(col);		    
+	    tbody.append(row);
+	}	
 };

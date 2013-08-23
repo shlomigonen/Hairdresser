@@ -1,0 +1,11 @@
+.pricelist-table { 
+	margin: 1em; 
+	border-collapse: collapse; 
+	width: 20%;
+	text-align: right;
+}
+
+.pricelist-head, .pricelist-row { 
+	padding: .3em; 
+	border: 1px #ccc solid; 
+}

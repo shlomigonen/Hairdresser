@@ -17,17 +17,17 @@ public class Service {
 	
 	@Column(nullable=false)
 	private String name;	
-	private String price;
+	private Double price;
 	
 	public Service() {
 		this.id = 0;
 		this.type = "type";
 		this.category = "category";
 		this.name = "name";
-		this.price = "price";
+		this.price = price;
 	}
 	
-	public Service(String type, String category, String name, String price) {
+	public Service(String type, String category, String name, Double price) {
 		this.type = type;
 		this.category = category;
 		this.name = name;
@@ -66,11 +66,11 @@ public class Service {
 		this.name = name;
 	}
 
-	public String getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}	
 }

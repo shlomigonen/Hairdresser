@@ -26,20 +26,20 @@ public class CreateServices {
 		
 		CreateServices createSErvices = new CreateServices();
 		
-		createSErvices.addService("עיצוב שער", "נשים", "החלקה", "100");		
-		createSErvices.addService("עיצוב שער", "נשים", "סילסול", "100");		
-		createSErvices.addService("עיצוב שער", "נשים", "פן", "100");		
-		createSErvices.addService("עיצוב שער", "גברים", "רונאלדו", "50");	
-		createSErvices.addService("עיצוב שער", "ילדים", "מוהיקן", "20");
-		createSErvices.addService("טיפול פנים", "פילינג", "פילינג קל", "120");
-		createSErvices.addService("טיפול פנים", "פילינג", "פילינג בינוני", "120");
-		createSErvices.addService("טיפול פנים", "קוסמטיקה", "טיפול לעור יבש", "150");
-		createSErvices.addService("טיפול פנים", "קוסמטיקה", "טיפול לאקנה", "150");
+		createSErvices.addService("עיצוב שער", "נשים", "החלקה", new Double(100.50));		
+		createSErvices.addService("עיצוב שער", "נשים", "סילסול", new Double(100));		
+		createSErvices.addService("עיצוב שער", "נשים", "פן", new Double(100));		
+		createSErvices.addService("עיצוב שער", "גברים", "רונאלדו", new Double(50.25));	
+		createSErvices.addService("עיצוב שער", "ילדים", "מוהיקן", new Double(20));
+		createSErvices.addService("טיפול פנים", "פילינג", "פילינג קל", new Double(120.70));
+		createSErvices.addService("טיפול פנים", "פילינג", "פילינג בינוני", new Double(120));
+		createSErvices.addService("טיפול פנים", "קוסמטיקה", "טיפול לעור יבש", new Double(150));
+		createSErvices.addService("טיפול פנים", "קוסמטיקה", "טיפול לאקנה", new Double(150));
 		
 
 	}
 	
-	public Integer addService(String type, String category, String name, String price){
+	public Integer addService(String type, String category, String name, Double price){
 	      Session session = sessionFactory.openSession();
 	      Transaction tx = null;
 	      Integer serviceId = null;

@@ -93,15 +93,6 @@ public class Menu {
 
 	private List<Service> getHaircuts() {
 
-		/*
-		 * Service haircut = new Service("עיצוב שער", "נשים", "החלקה", "100");
-		 * haircuts.add(haircut); haircut = new Service("עיצוב שער", "נשים",
-		 * "סילסול", "100"); haircuts.add(haircut); haircut = new
-		 * Service("עיצוב שער", "נשים", "פן", "100"); haircuts.add(haircut);
-		 * haircut = new Service("עיצוב שער", "גברים", "ריצ'רד גיר", "50");
-		 * haircuts.add(haircut); haircut = new Service("עיצוב שער", "ילדים",
-		 * "מוהיקן", "20"); haircuts.add(haircut);
-		 */
 		SessionFactory sessionFactory;
 		ServiceRegistry serviceRegistry;
 		
