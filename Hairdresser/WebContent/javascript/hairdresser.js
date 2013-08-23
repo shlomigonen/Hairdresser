@@ -28,7 +28,7 @@ $(document).ready(function() {
 
 function usePost(callback) {
 	$.ajax({
-		url: 'rest/Menu/service',
+		url: 'rest/PriceList/dispatcher',
 		type: 'POST',
 		dataType: 'json',
 		contentType: "application/json",
@@ -45,7 +45,7 @@ function usePost(callback) {
 
 function useGet(callback) {
 	$.ajax({
-		url: 'rest/Menu/getPriceList',
+		url: 'rest/PriceList/getPriceList',
 		type: 'GET',
 		dataType: 'json',
 		success: function(result) {

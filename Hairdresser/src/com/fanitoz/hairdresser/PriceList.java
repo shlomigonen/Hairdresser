@@ -1,9 +1,7 @@
 package com.fanitoz.hairdresser;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -23,20 +21,20 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
-@Path("/Menu")
-public class Menu {
+@Path("/PriceList")
+public class PriceList {
 
 	@GET
 	@Path("/getPriceList")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Service> getPriceList() {
-		return getHaircuts();
+		return getServices();
 	}
 
 	@POST
-	@Path("/service")
+	@Path("/dispatcher")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public JSONObject serviceDispatcher(JSONObject jsonObj) {
+	public JSONObject dispatcher(JSONObject jsonObj) {
 
 		String request = null;
 		JSONObject jsonResult = null;
@@ -50,18 +48,18 @@ public class Menu {
 
 		if (request != null) {
 			if (request.equals("getPriceList"))
-				jsonResult = getHaircutsPriceList();
+				jsonResult = getServicesInJSON();
 		}
 
 		return jsonResult;
 	}
 
-	private JSONObject getHaircutsPriceList() {
+	private JSONObject getServicesInJSON() {
 
 		JSONObject jsonReturn = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonObject = null;
-		List<Service> services = getHaircuts();
+		List<Service> services = getServices();
 
 		Iterator<Service> i = services.iterator();
 
@@ -91,7 +89,7 @@ public class Menu {
 		return jsonReturn;
 	}
 
-	private List<Service> getHaircuts() {
+	private List<Service> getServices() {
 
 		SessionFactory sessionFactory;
 		ServiceRegistry serviceRegistry;
