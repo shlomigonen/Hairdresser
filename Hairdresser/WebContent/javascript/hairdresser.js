@@ -21,12 +21,14 @@ $(document).ready(function() {
 	$('#mainDiv').append(table);
 		
 // This is only to demo how to use Post	
-//	usePost(buildPriceList);
+//	useDispatcher(buildPriceList);
 	
-	useGet(buildPriceList); 
+	getServices(buildPriceList); 
+	
+	addService(handleReturn);
 });
 
-function usePost(callback) {
+function useDispatcher(callback) {
 	$.ajax({
 		url: 'rest/PriceList/dispatcher',
 		type: 'POST',
@@ -43,7 +45,7 @@ function usePost(callback) {
 	});
 };
 
-function useGet(callback) {
+function getServices(callback) {
 	$.ajax({
 		url: 'rest/PriceList/getPriceList',
 		type: 'GET',
@@ -59,20 +61,41 @@ function useGet(callback) {
 	
 };
 
-function buildPriceList(priceList) {
+function addService(callback) {
+	$.ajax({
+		url: 'rest/PriceList/addService',
+		type: 'POST',
+		dataType: 'json',
+		contentType: "application/json",
+		data: '{"type":"עיצוב שער", "category":"נשים", "name":"קארה", "price":"130.80"}',
+		success: function(result) {
+			callback(result);
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+	        alert('error: ' + textStatus);
+	        return null;
+	    }
+	});
+};
+
+function buildPriceList(services) {
 	
 	var tbody = $('.pricelist-table');
 	var row;
 	var col;
 	
-	for(var i=0; i<priceList.length; i++){
+	for(var i=0; i<services.length; i++){
 	    row = $('<tr></tr>').addClass('pricelist-row');		
-	    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].category);
+	    col = $('<td></td>').addClass('pricelist-col').text(services[i].category);
 	    row.append(col);
-	    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].name);
+	    col = $('<td></td>').addClass('pricelist-col').text(services[i].name);
 	    row.append(col);
-	    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].price);
+	    col = $('<td></td>').addClass('pricelist-col').text(services[i].price);
 	    row.append(col);		    
 	    tbody.append(row);
 	}	
+};
+
+function handleReturn(result) {
+	handle = result;
 };

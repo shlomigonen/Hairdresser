@@ -9,6 +9,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -24,11 +25,57 @@ import org.hibernate.service.ServiceRegistryBuilder;
 @Path("/PriceList")
 public class PriceList {
 
+	private static SessionFactory sessionFactory = null;
+	private static ServiceRegistry serviceRegistry = null;
+
+	public PriceList() {
+		super();
+
+		if (serviceRegistry == null && sessionFactory == null) {
+			try {
+				Configuration configuration = new Configuration();
+				configuration.configure();
+				serviceRegistry = new ServiceRegistryBuilder().applySettings(
+						configuration.getProperties()).buildServiceRegistry();
+				sessionFactory = configuration
+						.buildSessionFactory(serviceRegistry);
+			} catch (Throwable ex) {
+				System.err.println("Failed to create sessionFactory object."
+						+ ex);
+				throw new ExceptionInInitializerError(ex);
+			}
+		}
+	}
+
 	@GET
 	@Path("/getPriceList")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Service> getPriceList() {
 		return getServices();
+	}
+
+	@POST
+	@Path("/addService")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Integer addService(Service service) {
+
+		Session session = sessionFactory.openSession();
+		Transaction tx = null;
+		int serviceId = 0;
+
+		try {
+			tx = session.beginTransaction();
+			serviceId = (Integer) session.save(service);
+			tx.commit();
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return serviceId;
 	}
 
 	@POST
@@ -48,13 +95,13 @@ public class PriceList {
 
 		if (request != null) {
 			if (request.equals("getPriceList"))
-				jsonResult = getServicesInJSON();
+				jsonResult = getPriceListInJSON();
 		}
 
 		return jsonResult;
 	}
 
-	private JSONObject getServicesInJSON() {
+	private JSONObject getPriceListInJSON() {
 
 		JSONObject jsonReturn = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
@@ -91,29 +138,16 @@ public class PriceList {
 
 	private List<Service> getServices() {
 
-		SessionFactory sessionFactory;
-		ServiceRegistry serviceRegistry;
-		
 		List<Service> services = null;
-
-		try {
-			Configuration configuration = new Configuration();
-			configuration.configure();
-			serviceRegistry = new ServiceRegistryBuilder().applySettings(
-					configuration.getProperties()).buildServiceRegistry();
-			sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-		} catch (Throwable ex) {
-			System.err.println("Failed to create sessionFactory object." + ex);
-			throw new ExceptionInInitializerError(ex);
-		}
 
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
+
 		try {
 			tx = session.beginTransaction();
-			
+
 			services = session.createQuery("FROM Service").list();
-						
+
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null)
