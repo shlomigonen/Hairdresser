@@ -24,7 +24,7 @@ public class Service {
 		this.type = "type";
 		this.category = "category";
 		this.name = "name";
-		this.price = price;
+		this.price = (double) 0;
 	}
 	
 	public Service(String type, String category, String name, Double price) {

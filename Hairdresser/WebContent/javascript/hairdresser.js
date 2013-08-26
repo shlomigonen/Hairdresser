@@ -10,7 +10,9 @@ $(document).ready(function() {
 	table.append(tbody);
 	
 	var row = $('<tr></tr>').addClass('pricelist-head');
-    var col = $('<th></th>').addClass('pricelist-col').text("קטגוריה");
+    var col = $('<th></th>').addClass('pricelist-col').text("סוג");
+    row.append(col);
+    col = $('<th></th>').addClass('pricelist-col').text("קטגוריה");
     row.append(col);
     col = $('<th></th>').addClass('pricelist-col').text("שם");
     row.append(col);
@@ -83,6 +85,8 @@ function showAddNewServiceDialog() {
 };
 
 function getServiceParameters() {
+	
+	// TODO: check that all inputs are correct 
 	addService(	{"type": $('#serviceType').val(), 
 				"category": $('#serviceCategory').val(), 
 				"name": $('#serviceName').val(), 
@@ -106,11 +110,13 @@ function createDialog(title, okCallback, cancelCallback) {
 					        modal: true,
 					        buttons: {
 					            "אישור": function() {
-					            	okCallback();
+					            	if (typeof okCallback !== 'undefined')
+					            		okCallback();
 					                $( this ).dialog( "close" );
 					            },
 					            "ביטול": function() {
-					            	cancelCallback();
+					            	if (typeof cancelCallback !== 'undefined')
+					            			cancelCallback();
 					                $( this ).dialog( "close" );
 					            }
 					        }
@@ -176,7 +182,9 @@ function buildPriceList(services) {
 	var col;
 	
 	for(var i=0; i<services.length; i++){
-	    row = $('<tr></tr>').addClass('pricelist-row');		
+	    row = $('<tr></tr>').addClass('pricelist-row');	
+	    col = $('<td></td>').addClass('pricelist-col').text(services[i].type);
+	    row.append(col);
 	    col = $('<td></td>').addClass('pricelist-col').text(services[i].category);
 	    row.append(col);
 	    col = $('<td></td>').addClass('pricelist-col').text(services[i].name);
