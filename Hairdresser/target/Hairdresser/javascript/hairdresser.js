@@ -20,46 +20,71 @@ $(document).ready(function() {
 
 	$('#mainDiv').append(table);
 	
-	var priceList;
+	var addButton = $('<button/>');	
+	addButton.addClass('pricelist-button').text("הוסף");
+	addButton.click(showAddNewServiceDialog);
 	
-	usePost(function(data) {
-		priceList = data.priceList;
-		
-		for(var i=0; i<priceList.length; i++){
-		    row = $('<tr></tr>').addClass('pricelist-row');		
-		    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].category);
-		    row.append(col);
-		    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].name);
-		    row.append(col);
-		    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].price);
-		    row.append(col);		    
-		    tbody.append(row);
-		}
-	});
+	var updateButton = $('<button/>');	
+	updateButton.addClass('pricelist-button').text("עדכן");
+	updateButton.click(showUpdateServiceDialog);
 	
-	useGet(function(data) {
-		priceList = data;
+	var deleteButton = $('<button/>');	
+	deleteButton.addClass('pricelist-button').text("מחק");
+	deleteButton.click(deleteService);
+	
+	$('#mainDiv').append(addButton);
+	$('#mainDiv').append(updateButton);
+	$('#mainDiv').append(deleteButton);
+	
+	$('#mainDiv').dialog();
 		
-		for(var i=0; i<priceList.length; i++){
-		    row = $('<tr></tr>').addClass('pricelist-row');		
-		    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].category);
-		    row.append(col);
-		    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].name);
-		    row.append(col);
-		    col = $('<td></td>').addClass('pricelist-col').text(priceList[i].price);
-		    row.append(col);		    
-		    tbody.append(row);
-		}
-	});
+// This is only to demo how to use Post	
+//	useDispatcher(buildPriceList);
+	
+	getServices(buildPriceList); 
+		
 });
 
-function usePost(callback) {
+function showAddNewServiceDialog() {
+	//var dialog = createDialog("מחק", "הכנס פרטים");
+	//$('#mainDiv').append(dialog);
+	//addService(handleReturn);
+	
+	$('#mainDiv').dialog();
+};
+
+function showUpdateServiceDialog() {
+	alert("Update");
+};
+
+function deleteService() {
+	alert("Delete");
+};
+
+function createDialog(title, text) {
+    return $("<div class='dialog' title='" + title + "'><p>" + text + "</p></div>")
+			    .dialog({
+			        resizable: false,
+			        height: 140,
+			        modal: true,
+			        buttons: {
+			            "Confirm": function() {
+			                $( this ).dialog( "close" );
+			            },
+			            Cancel: function() {
+			                $( this ).dialog( "close" );
+			            }
+			        }
+			    });
+};
+
+function useDispatcher(callback) {
 	$.ajax({
-		url: 'rest/Menu/service',
+		url: 'rest/ServiceCatalog/dispatcher',
 		type: 'POST',
 		dataType: 'json',
 		contentType: "application/json",
-		data: '{"request":"getPriceList"}',
+		data: '{"request":"getServices"}',
 		success: function(result) {
 			callback(result);
 		},
@@ -70,9 +95,9 @@ function usePost(callback) {
 	});
 };
 
-function useGet(callback) {
+function getServices(callback) {
 	$.ajax({
-		url: 'rest/Menu/getPriceList',
+		url: 'rest/ServiceCatalog/getServices',
 		type: 'GET',
 		dataType: 'json',
 		success: function(result) {
@@ -84,4 +109,46 @@ function useGet(callback) {
 	    }
 	});
 	
+};
+
+function addService(callback) {
+	$.ajax({
+		url: 'rest/ServiceCatalog/addService',
+		type: 'POST',
+		dataType: 'json',
+		contentType: "application/json",
+		data: '{"type":"עיצוב שער", "category":"נשים", "name":"קארה", "price":"130.80"}',
+		success: function(result) {
+			callback(result);
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+	        alert('error: ' + textStatus);
+	        return null;
+	    }
+	});
+};
+
+function buildPriceList(services) {
+	
+	var tbody = $('.pricelist-table');
+	var row;
+	var col;
+	
+	for(var i=0; i<services.length; i++){
+	    row = $('<tr></tr>').addClass('pricelist-row');		
+	    col = $('<td></td>').addClass('pricelist-col').text(services[i].category);
+	    row.append(col);
+	    col = $('<td></td>').addClass('pricelist-col').text(services[i].name);
+	    row.append(col);
+	    col = $('<td></td>').addClass('pricelist-col').text(services[i].price);
+	    row.append(col);		    
+	    tbody.append(row);
+	}	
+};
+
+function handleReturn(serviceId) {
+	if (serviceId > 0)
+		alert('New service added successfully.\nService ID is ' + serviceId);
+	else
+		alert('Adding new service operation failed!');
 };

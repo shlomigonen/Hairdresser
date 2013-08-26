@@ -19,27 +19,118 @@ $(document).ready(function() {
     thead.append(row);
 
 	$('#mainDiv').append(table);
-		
-// This is only to demo how to use Post	
-//	useDispatcher(buildPriceList);
+	
+	var dialogDiv = $('<div id="addServiceDialog"></div>').addClass('dialog-div');
+	$('#mainDiv').append(dialogDiv);
+	
+	var addButton = $('<input type="submit" value="הוסף" />');
+	addButton.button().click(showAddNewServiceDialog);
+	$('#mainDiv').append(addButton);
+	
+	var updateButton = $('<input type="submit" value="עדכן" />');
+	updateButton.button().click(showUpdateServiceDialog);
+	$('#mainDiv').append(updateButton);
+	
+	var deleteButton = $('<input type="submit" value="מחק" />');
+	deleteButton.button().click(deleteService);
+	$('#mainDiv').append(deleteButton);
+
+	// This is only to demo how to use Post	
+	//useDispatcher(buildPriceList);
 	
 	getServices(buildPriceList); 
-	
-	addService(handleReturn);
+		
 });
+
+function showAddNewServiceDialog() {
+	
+	createDialog("הוסף", getServiceParameters);
+	
+	var dialogContent = $('#dialogContent');
+	
+	dialogContent.empty();
+	
+	var table = $('<table></table>').addClass('add-service-table');
+
+	var col = ($('<td></td>').addClass('add-service--col')).append($('<label>סוג: </label>')); 
+	var row = $('<tr></tr>').addClass('add-service--row').append(col);
+    col = ($('<td></td>').addClass('add-service--col')).append($('<input type="text" id="serviceType"/>'));
+    row.append(col);
+    table.append(row);
+    
+    col = ($('<td></td>').addClass('add-service--col')).append($('<label>קטגוריה: </label>'));
+    row = $('<tr></tr>').addClass('add-service--row').append(col);
+    col = ($('<td></td>').addClass('add-service--col')).append($('<input type="text" id="serviceCategory"/>'));
+    row.append(col);
+    table.append(row);
+    
+    col = ($('<td></td>').addClass('add-service--col')).append($('<label>שם: </label>'));
+    row = $('<tr></tr>').addClass('add-service--row').append(col);
+    col = ($('<td></td>').addClass('add-service--col')).append($('<input type="text" id="serviceName"/>'));
+    row.append(col);
+    table.append(row);
+    
+    col = ($('<td></td>').addClass('add-service--col')).append($('<label>מחיר: </label>'));
+    row = $('<tr></tr>').addClass('add-service--row').append(col);
+    col = ($('<td></td>').addClass('add-service--col')).append($('<input type="number" id="servicePrice""/>'));
+    row.append(col);
+    table.append(row);
+    
+    dialogContent.append(table);
+			
+	// we need this to prevent the dialog from closing after initializing
+	return false;
+};
+
+function getServiceParameters() {
+	addService(	{"type": $('#serviceType').val(), 
+				"category": $('#serviceCategory').val(), 
+				"name": $('#serviceName').val(), 
+				"price": $('#servicePrice').val()});
+};
+
+function showUpdateServiceDialog() {
+	alert("Update");
+};
+
+function deleteService() {
+	alert("Delete");
+};
+
+function createDialog(title, okCallback, cancelCallback) {
+
+	$('#addServiceDialog').attr('title', title).dialog({
+					        resizable: false,
+					        height: 250,
+					        width: 270,
+					        modal: true,
+					        buttons: {
+					            "אישור": function() {
+					            	okCallback();
+					                $( this ).dialog( "close" );
+					            },
+					            "ביטול": function() {
+					            	cancelCallback();
+					                $( this ).dialog( "close" );
+					            }
+					        }
+					    });
+	
+	$('#addServiceDialog').append($("<p id='dialogContent'></p>"));
+};
 
 function useDispatcher(callback) {
 	$.ajax({
-		url: 'rest/PriceList/dispatcher',
+		url: 'rest/ServiceCatalog/dispatcher',
 		type: 'POST',
 		dataType: 'json',
 		contentType: "application/json",
-		data: '{"request":"getPriceList"}',
+		data: '{"request":"getServices"}',
 		success: function(result) {
 			callback(result);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-	        alert('error: ' + textStatus);
+	        alert('error: ' + textStatus + ':' + errorThrown);
 	        return null;
 	    }
 	});
@@ -47,32 +138,32 @@ function useDispatcher(callback) {
 
 function getServices(callback) {
 	$.ajax({
-		url: 'rest/PriceList/getPriceList',
+		url: 'rest/ServiceCatalog/getServices',
 		type: 'GET',
 		dataType: 'json',
 		success: function(result) {
 			callback(result);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-	        alert('error: ' + textStatus);
+	        alert('error: ' + textStatus + ':' + errorThrown);
 	        return null;
 	    }
 	});
 	
 };
 
-function addService(callback) {
+function addService(service) {
 	$.ajax({
-		url: 'rest/PriceList/addService',
+		url: 'rest/ServiceCatalog/addService',
 		type: 'POST',
 		dataType: 'json',
 		contentType: "application/json",
-		data: '{"type":"עיצוב שער", "category":"נשים", "name":"קארה", "price":"130.80"}',
+		data: JSON.stringify(service),
 		success: function(result) {
-			callback(result);
+			handleReturn(result);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-	        alert('error: ' + textStatus);
+			alert('error: ' + textStatus + ':' + errorThrown);
 	        return null;
 	    }
 	});
@@ -96,6 +187,9 @@ function buildPriceList(services) {
 	}	
 };
 
-function handleReturn(result) {
-	handle = result;
+function handleReturn(serviceId) {
+	if (serviceId > 0)
+		alert('New service added successfully.\nService ID is ' + serviceId);
+	else
+		alert('Adding new service operation failed!');
 };

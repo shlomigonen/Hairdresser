@@ -5,7 +5,9 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>פנית עוז עיצוב שיער</title>
-	<script type="text/javascript" src="javascript/lib/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="javascript/lib/jquery/jquery.js"></script>
+	<script type="text/javascript" src="javascript/lib/jquery/jquery-ui.js"></script>
+	<link rel="stylesheet" type="text/css" href="javascript/lib/jquery/css/jquery-ui.css">
 	<script type="text/javascript" src="javascript/hairdresser.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/mystyle.css">
 </head>
