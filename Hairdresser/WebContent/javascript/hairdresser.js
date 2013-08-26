@@ -10,13 +10,13 @@ $(document).ready(function() {
 	table.append(tbody);
 	
 	var row = $('<tr></tr>').addClass('pricelist-head');
-    var col = $('<th></th>').addClass('pricelist-col').text("סוג");
+    var col = $('<th></th>').addClass('pricelist-col').text("Type");
     row.append(col);
-    col = $('<th></th>').addClass('pricelist-col').text("קטגוריה");
+    col = $('<th></th>').addClass('pricelist-col').text("Category");
     row.append(col);
-    col = $('<th></th>').addClass('pricelist-col').text("שם");
+    col = $('<th></th>').addClass('pricelist-col').text("Name");
     row.append(col);
-    col = $('<th></th>').addClass('pricelist-col').text("מחיר");
+    col = $('<th></th>').addClass('pricelist-col').text("Price");
     row.append(col);	
     thead.append(row);
 
@@ -25,15 +25,15 @@ $(document).ready(function() {
 	var dialogDiv = $('<div id="addServiceDialog"></div>').addClass('dialog-div');
 	$('#mainDiv').append(dialogDiv);
 	
-	var addButton = $('<input type="submit" value="הוסף" />');
+	var addButton = $('<input type="submit" value="Add" />');
 	addButton.button().click(showAddNewServiceDialog);
 	$('#mainDiv').append(addButton);
 	
-	var updateButton = $('<input type="submit" value="עדכן" />');
+	var updateButton = $('<input type="submit" value="Update" />');
 	updateButton.button().click(showUpdateServiceDialog);
 	$('#mainDiv').append(updateButton);
 	
-	var deleteButton = $('<input type="submit" value="מחק" />');
+	var deleteButton = $('<input type="submit" value="Delete" />');
 	deleteButton.button().click(deleteService);
 	$('#mainDiv').append(deleteButton);
 
@@ -46,7 +46,7 @@ $(document).ready(function() {
 
 function showAddNewServiceDialog() {
 	
-	createDialog("הוסף", getServiceParameters);
+	createDialog("New Service", getServiceParameters);
 	
 	var dialogContent = $('#dialogContent');
 	
@@ -54,25 +54,25 @@ function showAddNewServiceDialog() {
 	
 	var table = $('<table></table>').addClass('add-service-table');
 
-	var col = ($('<td></td>').addClass('add-service--col')).append($('<label>סוג: </label>')); 
+	var col = ($('<td></td>').addClass('add-service--col')).append($('<label>Type: </label>')); 
 	var row = $('<tr></tr>').addClass('add-service--row').append(col);
     col = ($('<td></td>').addClass('add-service--col')).append($('<input type="text" id="serviceType"/>'));
     row.append(col);
     table.append(row);
     
-    col = ($('<td></td>').addClass('add-service--col')).append($('<label>קטגוריה: </label>'));
+    col = ($('<td></td>').addClass('add-service--col')).append($('<label>Category: </label>'));
     row = $('<tr></tr>').addClass('add-service--row').append(col);
     col = ($('<td></td>').addClass('add-service--col')).append($('<input type="text" id="serviceCategory"/>'));
     row.append(col);
     table.append(row);
     
-    col = ($('<td></td>').addClass('add-service--col')).append($('<label>שם: </label>'));
+    col = ($('<td></td>').addClass('add-service--col')).append($('<label>Name: </label>'));
     row = $('<tr></tr>').addClass('add-service--row').append(col);
     col = ($('<td></td>').addClass('add-service--col')).append($('<input type="text" id="serviceName"/>'));
     row.append(col);
     table.append(row);
     
-    col = ($('<td></td>').addClass('add-service--col')).append($('<label>מחיר: </label>'));
+    col = ($('<td></td>').addClass('add-service--col')).append($('<label>Price: </label>'));
     row = $('<tr></tr>').addClass('add-service--row').append(col);
     col = ($('<td></td>').addClass('add-service--col')).append($('<input type="number" id="servicePrice""/>'));
     row.append(col);
@@ -109,12 +109,12 @@ function createDialog(title, okCallback, cancelCallback) {
 					        width: 270,
 					        modal: true,
 					        buttons: {
-					            "אישור": function() {
+					            "Ok": function() {
 					            	if (typeof okCallback !== 'undefined')
 					            		okCallback();
 					                $( this ).dialog( "close" );
 					            },
-					            "ביטול": function() {
+					            "Cancel": function() {
 					            	if (typeof cancelCallback !== 'undefined')
 					            			cancelCallback();
 					                $( this ).dialog( "close" );

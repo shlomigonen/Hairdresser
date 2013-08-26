@@ -11,7 +11,10 @@
 	<script type="text/javascript" src="javascript/hairdresser.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/mystyle.css">
 </head>
-<body dir="rtl">
+
+<!-- To support Right to Left  -->
+<!-- <body dir="rtl">  -->
+<body>
 <!-- 
 	<h1>Welcome</h1>
 	<form action="Main">

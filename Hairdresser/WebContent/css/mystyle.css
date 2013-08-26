@@ -3,10 +3,10 @@ body {
 }
 
 .pricelist-table { 
-	margin: 1em; 
+	margin-bottom: 1em; 
 	border-collapse: collapse; 
 	width: 20%;
-	text-align: right;
+	/*text-align: right;*/
 }
 
 .pricelist-head { 
@@ -19,6 +19,7 @@ body {
     font-weight: bold;
     line-height: 14px; 
     line-height: 25px;
+    text-align: left
 }
 
 .pricelist-row { 
