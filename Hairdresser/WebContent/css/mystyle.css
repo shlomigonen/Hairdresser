@@ -2,11 +2,19 @@ body {
 	font-size: 12px;
 }
 
+.highlight {
+    background-color: #2779AA;
+}
+
 .pricelist-table { 
 	margin-bottom: 1em; 
 	border-collapse: collapse; 
 	width: 20%;
 	/*text-align: right;*/
+}
+
+.pricelist-table tr:hover {
+    background-color: #D7EBF9;
 }
 
 .pricelist-head { 
