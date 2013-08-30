@@ -1,3 +1,4 @@
+
 package com.fanitoz.hairdresser;
 
 import javax.persistence.Column;

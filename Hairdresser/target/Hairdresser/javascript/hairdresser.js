@@ -2,153 +2,226 @@
 
 $(document).ready(function() {
 	
-	var table = $('<table></table>').addClass('pricelist-table');	
-	var thead = $('<thead></thead>');
-	var tbody = $('<tbody></tbody>');
+	var hairdresser = new Hairdresse();
 	
-	table.append(thead);
-	table.append(tbody);
-	
-	var row = $('<tr></tr>').addClass('pricelist-head');
-    var col = $('<th></th>').addClass('pricelist-col').text("קטגוריה");
-    row.append(col);
-    col = $('<th></th>').addClass('pricelist-col').text("שם");
-    row.append(col);
-    col = $('<th></th>').addClass('pricelist-col').text("מחיר");
-    row.append(col);	
-    thead.append(row);
-
-	$('#mainDiv').append(table);
-	
-	var addButton = $('<button/>');	
-	addButton.addClass('pricelist-button').text("הוסף");
-	addButton.click(showAddNewServiceDialog);
-	
-	var updateButton = $('<button/>');	
-	updateButton.addClass('pricelist-button').text("עדכן");
-	updateButton.click(showUpdateServiceDialog);
-	
-	var deleteButton = $('<button/>');	
-	deleteButton.addClass('pricelist-button').text("מחק");
-	deleteButton.click(deleteService);
-	
-	$('#mainDiv').append(addButton);
-	$('#mainDiv').append(updateButton);
-	$('#mainDiv').append(deleteButton);
-	
-	$('#mainDiv').dialog();
-		
-// This is only to demo how to use Post	
-//	useDispatcher(buildPriceList);
-	
-	getServices(buildPriceList); 
-		
+	hairdresser.showServiceCatalog();			
 });
 
-function showAddNewServiceDialog() {
-	//var dialog = createDialog("מחק", "הכנס פרטים");
-	//$('#mainDiv').append(dialog);
-	//addService(handleReturn);
+
+// The Hairdresser object and constructor
+function Hairdresse () {
 	
-	$('#mainDiv').dialog();
-};
-
-function showUpdateServiceDialog() {
-	alert("Update");
-};
-
-function deleteService() {
-	alert("Delete");
-};
-
-function createDialog(title, text) {
-    return $("<div class='dialog' title='" + title + "'><p>" + text + "</p></div>")
-			    .dialog({
-			        resizable: false,
-			        height: 140,
-			        modal: true,
-			        buttons: {
-			            "Confirm": function() {
-			                $( this ).dialog( "close" );
-			            },
-			            Cancel: function() {
-			                $( this ).dialog( "close" );
-			            }
-			        }
-			    });
-};
-
-function useDispatcher(callback) {
-	$.ajax({
-		url: 'rest/ServiceCatalog/dispatcher',
-		type: 'POST',
-		dataType: 'json',
-		contentType: "application/json",
-		data: '{"request":"getServices"}',
-		success: function(result) {
-			callback(result);
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-	        alert('error: ' + textStatus);
-	        return null;
-	    }
-	});
-};
-
-function getServices(callback) {
-	$.ajax({
-		url: 'rest/ServiceCatalog/getServices',
-		type: 'GET',
-		dataType: 'json',
-		success: function(result) {
-			callback(result);
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-	        alert('error: ' + textStatus);
-	        return null;
-	    }
-	});
-	
-};
-
-function addService(callback) {
-	$.ajax({
-		url: 'rest/ServiceCatalog/addService',
-		type: 'POST',
-		dataType: 'json',
-		contentType: "application/json",
-		data: '{"type":"עיצוב שער", "category":"נשים", "name":"קארה", "price":"130.80"}',
-		success: function(result) {
-			callback(result);
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-	        alert('error: ' + textStatus);
-	        return null;
-	    }
-	});
-};
-
-function buildPriceList(services) {
-	
-	var tbody = $('.pricelist-table');
-	var row;
-	var col;
-	
-	for(var i=0; i<services.length; i++){
-	    row = $('<tr></tr>').addClass('pricelist-row');		
-	    col = $('<td></td>').addClass('pricelist-col').text(services[i].category);
+	var _mainDiv = $('#mainDiv');
+	var _newServiceDialog = null;
+	var _updateServiceDialog = null;
+	var _addServicedialogDiv = null;
+	var _updateServicedialogDiv = null;
+	var _selectedRow = null;
+		
+	this.showServiceCatalog = function() {
+		
+		var table = $('<table></table>').addClass('catalog-table');	
+		var thead = $('<thead></thead>');
+		var tbody = $('<tbody></tbody>');
+		
+		table.append(thead);
+		table.append(tbody);
+		
+		var row = $('<tr></tr>').addClass('catalog-head');
+	    var col = $('<th></th>').addClass('catalog-col').text("Type");
 	    row.append(col);
-	    col = $('<td></td>').addClass('pricelist-col').text(services[i].name);
+	    col = $('<th></th>').addClass('catalog-col').text("Category");
 	    row.append(col);
-	    col = $('<td></td>').addClass('pricelist-col').text(services[i].price);
-	    row.append(col);		    
-	    tbody.append(row);
-	}	
-};
+	    col = $('<th></th>').addClass('catalog-col').text("Name");
+	    row.append(col);
+	    col = $('<th></th>').addClass('catalog-col').text("Price");
+	    row.append(col);	
+	    col = $('<th></th>').addClass('catalog-col').text("ID");
+	    row.append(col);
+	    thead.append(row);
 
-function handleReturn(serviceId) {
-	if (serviceId > 0)
-		alert('New service added successfully.\nService ID is ' + serviceId);
-	else
-		alert('Adding new service operation failed!');
-};
+		_mainDiv.append(table);		
+		
+		var addButton = $('<input type="submit" value="Add" />');
+		addButton.button().click(showAddNewServiceDialog);
+		_mainDiv.append(addButton);
+		
+		var updateButton = $('<input type="submit" value="Update" />');
+		updateButton.button().click(showUpdateServiceDialog);
+		_mainDiv.append(updateButton);
+		
+		var deleteButton = $('<input type="submit" value="Delete" />');
+		deleteButton.button().click(handleDeleteService);
+		_mainDiv.append(deleteButton);
+			
+		showServiceCatalog(); 		
+	};
+	
+	function selectRow(event) {
+		_selectedRow = this;
+		$(this).addClass("highlight").siblings().removeClass("highlight");
+	}
+	
+	
+	function showAddNewServiceDialog() {
+		
+		if (_newServiceDialog == null) {
+			_addServicedialogDiv = $('<div id="addServiceDialog"></div>').addClass('dialog-div');
+			_mainDiv.append(_addServicedialogDiv);
+			
+			_newServiceDialog = new ServiceDialog(_addServicedialogDiv, "New Service", handleNewService);
+		}
+		
+		_newServiceDialog.open();		
+		// we need this to prevent the dialog from closing after initializing
+		return false;
+	}
+	
+	function showUpdateServiceDialog() {
+		
+		if (_updateServiceDialog == null) {
+			_updateServicedialogDiv = $('<div id="updateServiceDialog"></div>').addClass('dialog-div');
+			_mainDiv.append(_updateServiceDialog);
+			
+			_updateServiceDialog = new ServiceDialog(_updateServicedialogDiv, "Update Service", handleUpdateService);
+		}
+		
+		if (_selectedRow == null) {
+			alert("Please select a service from the table ane then click on update");
+		}
+		else {
+			_updateServiceDialog.open({	type: $(_selectedRow).find("#serviceType").text(), 
+										category:$(_selectedRow).find("#serviceCategory").text(), 
+										name:$(_selectedRow).find("#serviceName").text(), 
+										price:$(_selectedRow).find("#servicePrice").text()});	
+		}
+		
+		// we need this to prevent the dialog from closing after initializing
+		return false;
+	}
+
+	function handleNewService() {		
+		addService(_newServiceDialog.getService());
+	}
+	
+	function handleUpdateService(service){
+		alert("handleUpdateService");
+	}
+
+	function handleDeleteService() {
+		if (_selectedRow == null) {
+			alert("Please select a service from the table ane then click on delete");
+		}
+		else {
+			// TODO: show a confirmation dialog
+			deleteService({	type: $(_selectedRow).find("#serviceType").text(), 
+							category:$(_selectedRow).find("#serviceCategory").text(), 
+							name:$(_selectedRow).find("#serviceName").text(), 
+							price:$(_selectedRow).find("#servicePrice").text(),
+							id:$(_selectedRow).find("#serviceId").text()});
+		}
+	}
+
+	function useDispatcher(callback) {
+		$.ajax({
+			url: 'rest/ServiceCatalog/dispatcher',
+			type: 'POST',
+			dataType: 'json',
+			contentType: "application/json",
+			data: '{"request":"getServices"}',
+			success: function(result) {
+				callback(result);
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+		        alert('error: ' + textStatus + ':' + errorThrown);
+		        return null;
+		    }
+		});
+	}
+
+	function getServices(callback) {
+		$.ajax({
+			url: 'rest/ServiceCatalog/getServices',
+			type: 'GET',
+			dataType: 'json',
+			success: function(result) {
+				callback(result);
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+		        alert('error: ' + textStatus + ':' + errorThrown);
+		        return null;
+		    }
+		});
+		
+	}
+
+	function addService(service) {
+		$.ajax({
+			url: 'rest/ServiceCatalog/addService',
+			type: 'POST',
+			dataType: 'json',
+			contentType: "application/json",
+			data: JSON.stringify(service),
+			success: function(result) {
+				handleReturn(result);
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				alert('error: ' + textStatus + ':' + errorThrown);
+		        return null;
+		    }
+		});
+	}
+	
+	function deleteService(service) {
+		$.ajax({
+			url: 'rest/ServiceCatalog/deleteService',
+			type: 'POST',
+			dataType: 'json',
+			contentType: "application/json",
+			data: JSON.stringify(service),
+			success: function(result) {
+				handleReturn(result);
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				alert('error: ' + textStatus + ':' + errorThrown);
+		        return null;
+		    }
+		});
+	}
+
+	function showServiceCatalog() {
+		
+		getServices(handleServices); 
+		
+		function handleServices(services) {
+			var tbody = $('.catalog-table');
+			var row;
+			var col;
+			
+			for(var i=0; i<services.length; i++){
+			    row = $('<tr></tr>').addClass('catalog-row');	
+			    col = $('<td id="serviceType"></td>').addClass('catalog-col').text(services[i].type);
+			    row.append(col);
+			    col = $('<td id="serviceCategory"></td>').addClass('catalog-col').text(services[i].category);
+			    row.append(col);
+			    col = $('<td id="serviceName"></td>').addClass('catalog-col').text(services[i].name);
+			    row.append(col);
+			    col = $('<td id="servicePrice"></td>').addClass('catalog-col').text(services[i].price);
+			    row.append(col);	
+			    col = $('<td id="serviceId"></td>').addClass('catalog-col').text(services[i].id);
+			    row.append(col);
+			    tbody.append(row);
+			}	
+			
+			$('.catalog-row').click(selectRow);
+		}
+	}
+
+	function handleReturn(serviceId) {
+		if (serviceId > 0)
+			alert('New service added successfully.\nService ID is ' + serviceId);
+		else
+			alert('Adding new service operation failed!');
+	}
+}
+

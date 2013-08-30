@@ -76,6 +76,56 @@ public class ServiceCatalog {
 
 		return serviceId;
 	}
+	
+	@POST
+	@Path("/deleteService")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Boolean deleteService(Service service) {
+
+		Session session = sessionFactory.openSession();
+		Transaction tx = null;
+		Boolean result = true;
+
+		try {
+			tx = session.beginTransaction();
+			session.delete(service);
+			tx.commit();
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+			result = false;
+		} finally {
+			session.close();
+		}
+		
+		return result;
+	}
+	
+	@POST
+	@Path("/updateService")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Boolean updateService(Service service) {
+
+		Session session = sessionFactory.openSession();
+		Transaction tx = null;
+		Boolean result = true;
+
+		try {
+			tx = session.beginTransaction();
+			session.update(service);
+			tx.commit();
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+			result = false;
+		} finally {
+			session.close();
+		}
+		
+		return result;
+	}
 
 	@POST
 	@Path("/dispatcher")

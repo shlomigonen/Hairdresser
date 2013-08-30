@@ -1,11 +1,37 @@
-.pricelist-table { 
-	margin: 1em; 
-	border-collapse: collapse; 
-	width: 20%;
-	text-align: right;
+body {
+	font-size: 12px;
 }
 
-.pricelist-head, .pricelist-row { 
-	padding: .3em; 
-	border: 1px #ccc solid; 
+.highlight {
+    background-color: #2779AA;
+}
+
+.catalog-table { 
+	margin-bottom: 1em; 
+	border-collapse: collapse; 
+	width: 20%;
+	/*text-align: right;*/
+}
+
+.catalog-table tr:hover {
+    background-color: #D7EBF9;
+}
+
+.catalog-head { 
+	border: 1px solid #AED0EA; 
+	background: url("../javascript/lib/jquery/css/images/ui-bg_glass_80_d7ebf9_1x400.png") repeat-x scroll 50% 50% #D7EBF9;
+	font-family: Lucida Grande,Lucida Sans,Arial,sans-serif;
+	font-size: 1.1em;
+    padding: 0.4em 1em;
+    color: #2779AA;
+    font-weight: bold;
+    line-height: 14px; 
+    line-height: 25px;
+    text-align: left
+}
+
+.catalog-row { 
+	font-size: 1.1em;
+	font-family: Lucida Grande,Lucida Sans,Arial,sans-serif;
+	border: 1px solid #AED0EA;
 }
