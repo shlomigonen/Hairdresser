@@ -1,5 +1,5 @@
-// Check if the document was loaded and functional
 
+// Check if the document was loaded and functional
 $(document).ready(function() {
 	
 	var hairdresser = new Hairdresse();
@@ -91,9 +91,9 @@ function Hairdresse () {
 		}
 		else {
 			_updateServiceDialog.open({	type: $(_selectedRow).find("#serviceType").text(), 
-										category:$(_selectedRow).find("#serviceCategory").text(), 
-										name:$(_selectedRow).find("#serviceName").text(), 
-										price:$(_selectedRow).find("#servicePrice").text()});	
+										category: $(_selectedRow).find("#serviceCategory").text(), 
+										name: $(_selectedRow).find("#serviceName").text(), 
+										price: $(_selectedRow).find("#servicePrice").text()});	
 		}
 		
 		// we need this to prevent the dialog from closing after initializing
@@ -115,12 +115,14 @@ function Hairdresse () {
 			alert("Please select a service from the table ane then click on delete");
 		}
 		else {
-			// TODO: show a confirmation dialog
-			deleteService({	type: $(_selectedRow).find("#serviceType").text(), 
-							category:$(_selectedRow).find("#serviceCategory").text(), 
-							name:$(_selectedRow).find("#serviceName").text(), 
-							price:$(_selectedRow).find("#servicePrice").text(),
-							id:$(_selectedRow).find("#serviceId").text()});
+			// TODO: show a confirmation dialog			
+			var service = {	type: $(_selectedRow).find("#serviceType").text(), 
+							category: $(_selectedRow).find("#serviceCategory").text(), 
+							name: $(_selectedRow).find("#serviceName").text(), 
+							price: $(_selectedRow).find("#servicePrice").text(),
+							id: $(_selectedRow).find("#serviceId").text()};
+			
+			deleteService(service);
 		}
 	}
 

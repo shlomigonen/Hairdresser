@@ -58,10 +58,10 @@ function ServiceDialog (div, title, okCallback, cancelCallback) {
 	};
 		
 	this.getService = function() {
-		return {"type": $("#" + _serviceTypeInputId).val(), 
-				"category": $("#" + _serviceCategoryInputId).val(), 
-				"name": $("#" + _serviceNameInputId).val(), 
-				"price": $("#" + _servicePriceInputId).val()};
+		return {type: $("#" + _serviceTypeInputId).val(), 
+				category: $("#" + _serviceCategoryInputId).val(), 
+				name: $("#" + _serviceNameInputId).val(), 
+				price: $("#" + _servicePriceInputId).val()};
 	};
 	
 	function createDialog() {
