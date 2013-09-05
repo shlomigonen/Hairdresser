@@ -4,7 +4,8 @@ $(document).ready(function() {
 	
 	var hairdresser = new Hairdresse();
 	
-	hairdresser.showServiceCatalog();			
+	hairdresser.showServiceCatalog();
+	
 });
 
 
@@ -124,6 +125,8 @@ function Hairdresse () {
 			
 			deleteService(service);
 		}
+		
+		return false;
 	}
 
 	function useDispatcher(callback) {
@@ -167,8 +170,10 @@ function Hairdresse () {
 			contentType: "application/json",
 			data: JSON.stringify(service),
 			success: function(result) {
-				if (result > 0)
+				if (result > 0) {
 					alert('New service added successfully.\nService ID is ' + result);
+					refreshServiceCatalog();
+				}
 				else
 					alert('Adding new service operation failed!');
 			},
@@ -187,8 +192,10 @@ function Hairdresse () {
 			contentType: "application/json",
 			data: JSON.stringify(service),
 			success: function(result) {
-				if (result == true)
+				if (result == true) {
 					alert('Service updated successfully.');
+					refreshServiceCatalog();
+				}
 				else
 					alert('Updating service operation failed!');
 			},
@@ -208,8 +215,10 @@ function Hairdresse () {
 			contentType: "application/json",
 			data: JSON.stringify(service),
 			success: function(result) {
-				if (result == true)
+				if (result == true) {
 					alert('Service deleted successfully.');
+					refreshServiceCatalog();
+				}
 				else
 					alert('Deleting service operation failed!');
 			},
@@ -218,6 +227,11 @@ function Hairdresse () {
 		        return null;
 		    }
 		});
+	}
+	
+	function refreshServiceCatalog() {
+		$('.catalog-table tbody').remove();
+		showServiceCatalog();
 	}
 
 	function showServiceCatalog() {
