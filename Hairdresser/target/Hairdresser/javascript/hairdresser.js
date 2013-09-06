@@ -1,10 +1,11 @@
-// Check if the document was loaded and functional
 
+// Check if the document was loaded and functional
 $(document).ready(function() {
 	
 	var hairdresser = new Hairdresse();
 	
-	hairdresser.showServiceCatalog();			
+	hairdresser.showServiceCatalog();
+	
 });
 
 
@@ -91,9 +92,9 @@ function Hairdresse () {
 		}
 		else {
 			_updateServiceDialog.open({	type: $(_selectedRow).find("#serviceType").text(), 
-										category:$(_selectedRow).find("#serviceCategory").text(), 
-										name:$(_selectedRow).find("#serviceName").text(), 
-										price:$(_selectedRow).find("#servicePrice").text()});	
+										category: $(_selectedRow).find("#serviceCategory").text(), 
+										name: $(_selectedRow).find("#serviceName").text(), 
+										price: $(_selectedRow).find("#servicePrice").text()});	
 		}
 		
 		// we need this to prevent the dialog from closing after initializing
@@ -104,8 +105,10 @@ function Hairdresse () {
 		addService(_newServiceDialog.getService());
 	}
 	
-	function handleUpdateService(service){
-		alert("handleUpdateService");
+	function handleUpdateService(){
+		var service = _updateServiceDialog.getService();
+		service.id = $(_selectedRow).find("#serviceId").text();
+		updateService(service);
 	}
 
 	function handleDeleteService() {
@@ -113,13 +116,17 @@ function Hairdresse () {
 			alert("Please select a service from the table ane then click on delete");
 		}
 		else {
-			// TODO: show a confirmation dialog
-			deleteService({	type: $(_selectedRow).find("#serviceType").text(), 
-							category:$(_selectedRow).find("#serviceCategory").text(), 
-							name:$(_selectedRow).find("#serviceName").text(), 
-							price:$(_selectedRow).find("#servicePrice").text(),
-							id:$(_selectedRow).find("#serviceId").text()});
+			// TODO: show a confirmation dialog			
+			var service = {	type: $(_selectedRow).find("#serviceType").text(), 
+							category: $(_selectedRow).find("#serviceCategory").text(), 
+							name: $(_selectedRow).find("#serviceName").text(), 
+							price: $(_selectedRow).find("#servicePrice").text(),
+							id: $(_selectedRow).find("#serviceId").text()};
+			
+			deleteService(service);
 		}
+		
+		return false;
 	}
 
 	function useDispatcher(callback) {
@@ -163,7 +170,12 @@ function Hairdresse () {
 			contentType: "application/json",
 			data: JSON.stringify(service),
 			success: function(result) {
-				handleReturn(result);
+				if (result > 0) {
+					alert('New service added successfully.\nService ID is ' + result);
+					refreshServiceCatalog();
+				}
+				else
+					alert('Adding new service operation failed!');
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				alert('error: ' + textStatus + ':' + errorThrown);
@@ -172,6 +184,29 @@ function Hairdresse () {
 		});
 	}
 	
+	function updateService(service) {
+		$.ajax({
+			url: 'rest/ServiceCatalog/updateService',
+			type: 'POST',
+			dataType: 'json',
+			contentType: "application/json",
+			data: JSON.stringify(service),
+			success: function(result) {
+				if (result == true) {
+					alert('Service updated successfully.');
+					refreshServiceCatalog();
+				}
+				else
+					alert('Updating service operation failed!');
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				alert('error: ' + textStatus + ':' + errorThrown);
+		        return null;
+		    }
+		});
+	}
+	
+		
 	function deleteService(service) {
 		$.ajax({
 			url: 'rest/ServiceCatalog/deleteService',
@@ -180,13 +215,23 @@ function Hairdresse () {
 			contentType: "application/json",
 			data: JSON.stringify(service),
 			success: function(result) {
-				handleReturn(result);
+				if (result == true) {
+					alert('Service deleted successfully.');
+					refreshServiceCatalog();
+				}
+				else
+					alert('Deleting service operation failed!');
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				alert('error: ' + textStatus + ':' + errorThrown);
 		        return null;
 		    }
 		});
+	}
+	
+	function refreshServiceCatalog() {
+		$('.catalog-table tbody').remove();
+		showServiceCatalog();
 	}
 
 	function showServiceCatalog() {
@@ -216,12 +261,6 @@ function Hairdresse () {
 			$('.catalog-row').click(selectRow);
 		}
 	}
-
-	function handleReturn(serviceId) {
-		if (serviceId > 0)
-			alert('New service added successfully.\nService ID is ' + serviceId);
-		else
-			alert('Adding new service operation failed!');
-	}
+	
 }
 

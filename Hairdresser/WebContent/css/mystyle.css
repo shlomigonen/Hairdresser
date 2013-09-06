@@ -35,3 +35,7 @@ body {
 	font-family: Lucida Grande,Lucida Sans,Arial,sans-serif;
 	border: 1px solid #AED0EA;
 }
+
+.id-col {
+	display: none;
+}

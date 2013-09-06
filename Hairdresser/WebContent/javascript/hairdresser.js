@@ -37,7 +37,7 @@ function Hairdresse () {
 	    row.append(col);
 	    col = $('<th></th>').addClass('catalog-col').text("Price");
 	    row.append(col);	
-	    col = $('<th></th>').addClass('catalog-col').text("ID");
+	    col = $('<th></th>').addClass('id-col').text("ID");
 	    row.append(col);
 	    thead.append(row);
 
@@ -117,13 +117,11 @@ function Hairdresse () {
 		}
 		else {
 			// TODO: show a confirmation dialog			
-			var service = {	type: $(_selectedRow).find("#serviceType").text(), 
+			deleteService( {type: $(_selectedRow).find("#serviceType").text(), 
 							category: $(_selectedRow).find("#serviceCategory").text(), 
 							name: $(_selectedRow).find("#serviceName").text(), 
 							price: $(_selectedRow).find("#servicePrice").text(),
-							id: $(_selectedRow).find("#serviceId").text()};
-			
-			deleteService(service);
+							id: $(_selectedRow).find("#serviceId").text()});
 		}
 		
 		return false;
@@ -253,7 +251,7 @@ function Hairdresse () {
 			    row.append(col);
 			    col = $('<td id="servicePrice"></td>').addClass('catalog-col').text(services[i].price);
 			    row.append(col);	
-			    col = $('<td id="serviceId"></td>').addClass('catalog-col').text(services[i].id);
+			    col = $('<td id="serviceId"></td>').addClass('id-col').text(services[i].id);
 			    row.append(col);
 			    tbody.append(row);
 			}	
