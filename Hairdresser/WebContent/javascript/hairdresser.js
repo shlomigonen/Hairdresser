@@ -37,8 +37,6 @@ function Hairdresse () {
 	    row.append(col);
 	    col = $('<th></th>').addClass('catalog-col').text("Price");
 	    row.append(col);	
-	    col = $('<th></th>').addClass('id-col').text("ID");
-	    row.append(col);
 	    thead.append(row);
 
 		_mainDiv.append(table);		
@@ -107,7 +105,8 @@ function Hairdresse () {
 	
 	function handleUpdateService(){
 		var service = _updateServiceDialog.getService();
-		service.id = $(_selectedRow).find("#serviceId").text();
+		// get the service id using jquery data service
+		service.id = $(_selectedRow).data('serviceId');
 		updateService(service);
 	}
 
@@ -117,11 +116,13 @@ function Hairdresse () {
 		}
 		else {
 			// TODO: show a confirmation dialog			
-			deleteService( {type: $(_selectedRow).find("#serviceType").text(), 
+			var service = {	type: $(_selectedRow).find("#serviceType").text(), 
 							category: $(_selectedRow).find("#serviceCategory").text(), 
 							name: $(_selectedRow).find("#serviceName").text(), 
 							price: $(_selectedRow).find("#servicePrice").text(),
-							id: $(_selectedRow).find("#serviceId").text()});
+							id: $(_selectedRow).data('serviceId')};	// get the service id using jquery data service
+			
+			deleteService(service);
 		}
 		
 		return false;
@@ -237,23 +238,23 @@ function Hairdresse () {
 		getServices(handleServices); 
 		
 		function handleServices(services) {
-			var tbody = $('.catalog-table');
-			var row;
-			var col;
+			var $tbody = $('.catalog-table');
+			var $row;
+			var $col;
 			
 			for(var i=0; i<services.length; i++){
-			    row = $('<tr></tr>').addClass('catalog-row');	
-			    col = $('<td id="serviceType"></td>').addClass('catalog-col').text(services[i].type);
-			    row.append(col);
-			    col = $('<td id="serviceCategory"></td>').addClass('catalog-col').text(services[i].category);
-			    row.append(col);
-			    col = $('<td id="serviceName"></td>').addClass('catalog-col').text(services[i].name);
-			    row.append(col);
-			    col = $('<td id="servicePrice"></td>').addClass('catalog-col').text(services[i].price);
-			    row.append(col);	
-			    col = $('<td id="serviceId"></td>').addClass('id-col').text(services[i].id);
-			    row.append(col);
-			    tbody.append(row);
+			    $row = $('<tr></tr>').addClass('catalog-row');
+			    // we can store the id of the service on the tr element using jquery data service
+			    $row.data('serviceId', services[i].id);
+			    $col = $('<td id="serviceType"></td>').addClass('catalog-col').text(services[i].type);
+			    $row.append($col);
+			    $col = $('<td id="serviceCategory"></td>').addClass('catalog-col').text(services[i].category);
+			    $row.append($col);
+			    $col = $('<td id="serviceName"></td>').addClass('catalog-col').text(services[i].name);
+			    $row.append($col);
+			    $col = $('<td id="servicePrice"></td>').addClass('catalog-col').text(services[i].price);
+			    $row.append($col);	
+			    $tbody.append($row);
 			}	
 			
 			$('.catalog-row').click(selectRow);
