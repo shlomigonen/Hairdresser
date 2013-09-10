@@ -12,7 +12,7 @@ $(document).ready(function() {
 // The Hairdresser object and constructor
 function Hairdresse () {
 	
-	var _mainDiv = $('#mainDiv');
+	var _$mainDiv = $('#mainDiv');
 	var _newServiceDialog = null;
 	var _updateServiceDialog = null;
 	var _addServicedialogDiv = null;
@@ -21,41 +21,43 @@ function Hairdresse () {
 		
 	this.showServiceCatalog = function() {
 		
-		var table = $('<table></table>').addClass('catalog-table');	
-		var thead = $('<thead></thead>');
-		var tbody = $('<tbody></tbody>');
+		_$mainDiv.hide();
 		
-		table.append(thead);
-		table.append(tbody);
+		var $table = $('<table></table>').addClass('catalog-table');	
+		var $thead = $('<thead></thead>');
+		var $tbody = $('<tbody></tbody>');
 		
-		var row = $('<tr></tr>').addClass('catalog-head');
-	    var col = $('<th></th>').addClass('catalog-col').text("Type");
-	    row.append(col);
-	    col = $('<th></th>').addClass('catalog-col').text("Category");
-	    row.append(col);
-	    col = $('<th></th>').addClass('catalog-col').text("Name");
-	    row.append(col);
-	    col = $('<th></th>').addClass('catalog-col').text("Price");
-	    row.append(col);	
-	    col = $('<th></th>').addClass('catalog-col').text("ID");
-	    row.append(col);
-	    thead.append(row);
+		$table.append($thead);
+		$table.append($tbody);
+		
+		var $row = $('<tr></tr>').addClass('catalog-head');
+	    var $col = $('<th></th>').addClass('catalog-col').text("Type");
+	    $row.append($col);
+	    $col = $('<th></th>').addClass('catalog-col').text("Category");
+	    $row.append($col);
+	    $col = $('<th></th>').addClass('catalog-col').text("Name");
+	    $row.append($col);
+	    $col = $('<th></th>').addClass('catalog-col').text("Price");
+	    $row.append($col);	
+	    $thead.append($row);
 
-		_mainDiv.append(table);		
+		_$mainDiv.append($table);		
 		
-		var addButton = $('<input type="submit" value="Add" />');
-		addButton.button().click(showAddNewServiceDialog);
-		_mainDiv.append(addButton);
+		var $addButton = $('<input type="submit" value="Add" />');
+		$addButton.button().click(showAddNewServiceDialog);
+		_$mainDiv.append($addButton);
 		
-		var updateButton = $('<input type="submit" value="Update" />');
-		updateButton.button().click(showUpdateServiceDialog);
-		_mainDiv.append(updateButton);
+		var $updateButton = $('<input type="submit" value="Update" />');
+		$updateButton.button().click(showUpdateServiceDialog);
+		_$mainDiv.append($updateButton);
 		
-		var deleteButton = $('<input type="submit" value="Delete" />');
-		deleteButton.button().click(handleDeleteService);
-		_mainDiv.append(deleteButton);
+		var $deleteButton = $('<input type="submit" value="Delete" />');
+		$deleteButton.button().click(handleDeleteService);
+		_$mainDiv.append($deleteButton);
 			
-		showServiceCatalog(); 		
+		showServiceCatalog(); 	
+		
+		_$mainDiv.fadeIn('slow');
 	};
 	
 	function selectRow(event) {
@@ -68,7 +70,7 @@ function Hairdresse () {
 		
 		if (_newServiceDialog == null) {
 			_addServicedialogDiv = $('<div id="addServiceDialog"></div>').addClass('dialog-div');
-			_mainDiv.append(_addServicedialogDiv);
+			_$mainDiv.append(_addServicedialogDiv);
 			
 			_newServiceDialog = new ServiceDialog(_addServicedialogDiv, "New Service", handleNewService);
 		}
@@ -82,7 +84,7 @@ function Hairdresse () {
 		
 		if (_updateServiceDialog == null) {
 			_updateServicedialogDiv = $('<div id="updateServiceDialog"></div>').addClass('dialog-div');
-			_mainDiv.append(_updateServiceDialog);
+			_$mainDiv.append(_updateServiceDialog);
 			
 			_updateServiceDialog = new ServiceDialog(_updateServicedialogDiv, "Update Service", handleUpdateService);
 		}
@@ -107,7 +109,8 @@ function Hairdresse () {
 	
 	function handleUpdateService(){
 		var service = _updateServiceDialog.getService();
-		service.id = $(_selectedRow).find("#serviceId").text();
+		// get the service id using jquery data service
+		service.id = $(_selectedRow).data('serviceId');
 		updateService(service);
 	}
 
@@ -117,13 +120,11 @@ function Hairdresse () {
 		}
 		else {
 			// TODO: show a confirmation dialog			
-			var service = {	type: $(_selectedRow).find("#serviceType").text(), 
+			deleteService({	type: $(_selectedRow).find("#serviceType").text(), 
 							category: $(_selectedRow).find("#serviceCategory").text(), 
 							name: $(_selectedRow).find("#serviceName").text(), 
 							price: $(_selectedRow).find("#servicePrice").text(),
-							id: $(_selectedRow).find("#serviceId").text()};
-			
-			deleteService(service);
+							id: $(_selectedRow).data('serviceId')});	// get the service id using jquery data service			
 		}
 		
 		return false;
@@ -230,8 +231,12 @@ function Hairdresse () {
 	}
 	
 	function refreshServiceCatalog() {
+		_$mainDiv.hide();
 		$('.catalog-table tbody').remove();
 		showServiceCatalog();
+		
+		// for fade-in affect
+		//_$mainDiv.fadeIn('slow');
 	}
 
 	function showServiceCatalog() {
@@ -239,23 +244,23 @@ function Hairdresse () {
 		getServices(handleServices); 
 		
 		function handleServices(services) {
-			var tbody = $('.catalog-table');
-			var row;
-			var col;
+			var $tbody = $('.catalog-table');
+			var $row;
+			var $col;
 			
 			for(var i=0; i<services.length; i++){
-			    row = $('<tr></tr>').addClass('catalog-row');	
-			    col = $('<td id="serviceType"></td>').addClass('catalog-col').text(services[i].type);
-			    row.append(col);
-			    col = $('<td id="serviceCategory"></td>').addClass('catalog-col').text(services[i].category);
-			    row.append(col);
-			    col = $('<td id="serviceName"></td>').addClass('catalog-col').text(services[i].name);
-			    row.append(col);
-			    col = $('<td id="servicePrice"></td>').addClass('catalog-col').text(services[i].price);
-			    row.append(col);	
-			    col = $('<td id="serviceId"></td>').addClass('catalog-col').text(services[i].id);
-			    row.append(col);
-			    tbody.append(row);
+			    $row = $('<tr></tr>').addClass('catalog-row');
+			    // we can store the id of the service on the tr element using jquery data service
+			    $row.data('serviceId', services[i].id);
+			    $col = $('<td id="serviceType"></td>').addClass('catalog-col').text(services[i].type);
+			    $row.append($col);
+			    $col = $('<td id="serviceCategory"></td>').addClass('catalog-col').text(services[i].category);
+			    $row.append($col);
+			    $col = $('<td id="serviceName"></td>').addClass('catalog-col').text(services[i].name);
+			    $row.append($col);
+			    $col = $('<td id="servicePrice"></td>').addClass('catalog-col').text(services[i].price);
+			    $row.append($col);	
+			    $tbody.append($row);
 			}	
 			
 			$('.catalog-row').click(selectRow);

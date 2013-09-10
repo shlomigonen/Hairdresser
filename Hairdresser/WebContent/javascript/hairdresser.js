@@ -12,7 +12,7 @@ $(document).ready(function() {
 // The Hairdresser object and constructor
 function Hairdresse () {
 	
-	var _mainDiv = $('#mainDiv');
+	var _$mainDiv = $('#mainDiv');
 	var _newServiceDialog = null;
 	var _updateServiceDialog = null;
 	var _addServicedialogDiv = null;
@@ -21,39 +21,43 @@ function Hairdresse () {
 		
 	this.showServiceCatalog = function() {
 		
-		var table = $('<table></table>').addClass('catalog-table');	
-		var thead = $('<thead></thead>');
-		var tbody = $('<tbody></tbody>');
+		_$mainDiv.hide();
 		
-		table.append(thead);
-		table.append(tbody);
+		var $table = $('<table></table>').addClass('catalog-table');	
+		var $thead = $('<thead></thead>');
+		var $tbody = $('<tbody></tbody>');
 		
-		var row = $('<tr></tr>').addClass('catalog-head');
-	    var col = $('<th></th>').addClass('catalog-col').text("Type");
-	    row.append(col);
-	    col = $('<th></th>').addClass('catalog-col').text("Category");
-	    row.append(col);
-	    col = $('<th></th>').addClass('catalog-col').text("Name");
-	    row.append(col);
-	    col = $('<th></th>').addClass('catalog-col').text("Price");
-	    row.append(col);	
-	    thead.append(row);
+		$table.append($thead);
+		$table.append($tbody);
+		
+		var $row = $('<tr></tr>').addClass('catalog-head');
+	    var $col = $('<th></th>').addClass('catalog-col').text("Type");
+	    $row.append($col);
+	    $col = $('<th></th>').addClass('catalog-col').text("Category");
+	    $row.append($col);
+	    $col = $('<th></th>').addClass('catalog-col').text("Name");
+	    $row.append($col);
+	    $col = $('<th></th>').addClass('catalog-col').text("Price");
+	    $row.append($col);	
+	    $thead.append($row);
 
-		_mainDiv.append(table);		
+		_$mainDiv.append($table);		
 		
-		var addButton = $('<input type="submit" value="Add" />');
-		addButton.button().click(showAddNewServiceDialog);
-		_mainDiv.append(addButton);
+		var $addButton = $('<input type="submit" value="Add" />');
+		$addButton.button().click(showAddNewServiceDialog);
+		_$mainDiv.append($addButton);
 		
-		var updateButton = $('<input type="submit" value="Update" />');
-		updateButton.button().click(showUpdateServiceDialog);
-		_mainDiv.append(updateButton);
+		var $updateButton = $('<input type="submit" value="Update" />');
+		$updateButton.button().click(showUpdateServiceDialog);
+		_$mainDiv.append($updateButton);
 		
-		var deleteButton = $('<input type="submit" value="Delete" />');
-		deleteButton.button().click(handleDeleteService);
-		_mainDiv.append(deleteButton);
+		var $deleteButton = $('<input type="submit" value="Delete" />');
+		$deleteButton.button().click(handleDeleteService);
+		_$mainDiv.append($deleteButton);
 			
-		showServiceCatalog(); 		
+		showServiceCatalog(); 	
+		
+		_$mainDiv.fadeIn('slow');
 	};
 	
 	function selectRow(event) {
@@ -66,7 +70,7 @@ function Hairdresse () {
 		
 		if (_newServiceDialog == null) {
 			_addServicedialogDiv = $('<div id="addServiceDialog"></div>').addClass('dialog-div');
-			_mainDiv.append(_addServicedialogDiv);
+			_$mainDiv.append(_addServicedialogDiv);
 			
 			_newServiceDialog = new ServiceDialog(_addServicedialogDiv, "New Service", handleNewService);
 		}
@@ -80,7 +84,7 @@ function Hairdresse () {
 		
 		if (_updateServiceDialog == null) {
 			_updateServicedialogDiv = $('<div id="updateServiceDialog"></div>').addClass('dialog-div');
-			_mainDiv.append(_updateServiceDialog);
+			_$mainDiv.append(_updateServiceDialog);
 			
 			_updateServiceDialog = new ServiceDialog(_updateServicedialogDiv, "Update Service", handleUpdateService);
 		}
@@ -116,13 +120,11 @@ function Hairdresse () {
 		}
 		else {
 			// TODO: show a confirmation dialog			
-			var service = {	type: $(_selectedRow).find("#serviceType").text(), 
+			deleteService({	type: $(_selectedRow).find("#serviceType").text(), 
 							category: $(_selectedRow).find("#serviceCategory").text(), 
 							name: $(_selectedRow).find("#serviceName").text(), 
 							price: $(_selectedRow).find("#servicePrice").text(),
-							id: $(_selectedRow).data('serviceId')};	// get the service id using jquery data service
-			
-			deleteService(service);
+							id: $(_selectedRow).data('serviceId')});	// get the service id using jquery data service			
 		}
 		
 		return false;
@@ -229,8 +231,12 @@ function Hairdresse () {
 	}
 	
 	function refreshServiceCatalog() {
+		_$mainDiv.hide();
 		$('.catalog-table tbody').remove();
 		showServiceCatalog();
+		
+		// for fade-in affect
+		//_$mainDiv.fadeIn('slow');
 	}
 
 	function showServiceCatalog() {

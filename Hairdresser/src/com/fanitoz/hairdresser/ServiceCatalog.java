@@ -2,6 +2,7 @@ package com.fanitoz.hairdresser;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -20,15 +21,20 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 @Path("/ServiceCatalog")
 public class ServiceCatalog {
 
 	private static SessionFactory sessionFactory = null;
 	private static ServiceRegistry serviceRegistry = null;
+	private ApplicationContext context = null;
 
 	public ServiceCatalog() {
 		super();
+		
+		context = new ClassPathXmlApplicationContext(new String[] {"com/fanitoz/hairdresser/resources/locale.xml"/*, add more spring files here*/});
 
 		if (serviceRegistry == null && sessionFactory == null) {
 			try {
@@ -38,9 +44,14 @@ public class ServiceCatalog {
 						configuration.getProperties()).buildServiceRegistry();
 				sessionFactory = configuration
 						.buildSessionFactory(serviceRegistry);
+				
+				System.err.println(context.getMessage("session.factory.failure", new Object[] {"some kind of exception"}, new Locale("iw", "il")));
+				System.err.println(context.getMessage("session.factory.failure", new Object[] {"some kind of exception"}, Locale.US));				
+				System.err.println(context.getMessage("session.factory.failure", new Object[] {"some kind of exception"}, null));
+				
 			} catch (Throwable ex) {
-				System.err.println("Failed to create sessionFactory object."
-						+ ex);
+				//System.err.println(context.getMessage("session.factory.failure", new Object[] {ex}, Locale.US));
+				System.err.println(context.getMessage("session.factory.failure", new Object[] {ex}, null));
 				throw new ExceptionInInitializerError(ex);
 			}
 		}
