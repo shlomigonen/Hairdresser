@@ -231,7 +231,7 @@ function Hairdresse () {
 	}
 	
 	function refreshServiceCatalog() {
-		_$mainDiv.hide();
+		//_$mainDiv.hide();
 		$('.catalog-table tbody').remove();
 		showServiceCatalog();
 		

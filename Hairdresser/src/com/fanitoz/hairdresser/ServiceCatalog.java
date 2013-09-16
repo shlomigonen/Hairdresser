@@ -21,19 +21,24 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 @Path("/ServiceCatalog")
 public class ServiceCatalog {
-
+	// Logger (SLF4J)
+	final Logger logger = LoggerFactory.getLogger(getClass());
+	// Hibernate
 	private static SessionFactory sessionFactory = null;
 	private static ServiceRegistry serviceRegistry = null;
+	// Spring Message Source
 	private ApplicationContext context = null;
 
 	public ServiceCatalog() {
 		super();
-		
+			
 		context = new ClassPathXmlApplicationContext(new String[] {"com/fanitoz/hairdresser/resources/locale.xml"/*, add more spring files here*/});
 
 		if (serviceRegistry == null && sessionFactory == null) {
@@ -45,13 +50,11 @@ public class ServiceCatalog {
 				sessionFactory = configuration
 						.buildSessionFactory(serviceRegistry);
 				
-				System.err.println(context.getMessage("session.factory.failure", new Object[] {"some kind of exception"}, new Locale("iw", "il")));
-				System.err.println(context.getMessage("session.factory.failure", new Object[] {"some kind of exception"}, Locale.US));				
-				System.err.println(context.getMessage("session.factory.failure", new Object[] {"some kind of exception"}, null));
+				logger.info(context.getMessage("db.connection.succesful", null, new Locale("iw", "il")));
+				logger.info(context.getMessage("db.connection.succesful", null, Locale.US));
 				
 			} catch (Throwable ex) {
-				//System.err.println(context.getMessage("session.factory.failure", new Object[] {ex}, Locale.US));
-				System.err.println(context.getMessage("session.factory.failure", new Object[] {ex}, null));
+				logger.error(context.getMessage("session.factory.failure", new Object[] {ex}, null));
 				throw new ExceptionInInitializerError(ex);
 			}
 		}
@@ -61,6 +64,9 @@ public class ServiceCatalog {
 	@Path("/getServices")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Service> getServices() {
+		
+		logger.info(context.getMessage("get.services", null, Locale.US));
+		
 		return getServicesFromDB();
 	}
 
@@ -68,7 +74,9 @@ public class ServiceCatalog {
 	@Path("/addService")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Integer addService(Service service) {
-
+		
+		logger.info(context.getMessage("add.service", null, Locale.US));
+		
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
 		int serviceId = 0;
@@ -93,6 +101,8 @@ public class ServiceCatalog {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Boolean deleteService(Service service) {
 
+		logger.info(context.getMessage("delete.service", null, Locale.US));
+		
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
 		Boolean result = true;
@@ -117,6 +127,8 @@ public class ServiceCatalog {
 	@Path("/updateService")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Boolean updateService(Service service) {
+		
+		logger.info(context.getMessage("update.service", null, Locale.US));
 
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
