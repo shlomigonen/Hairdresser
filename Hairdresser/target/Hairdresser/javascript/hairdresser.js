@@ -2,15 +2,30 @@
 // Check if the document was loaded and functional
 $(document).ready(function() {
 	
-	var hairdresser = new Hairdresse();
+	// get the browser locale/language
+	var language = navigator.language;
+		
+	if (typeof navigator.language == "undefined")
+			language = navigator.systemLanguage; // Works for IE only
 	
-	hairdresser.showServiceCatalog();
-	
+	$.ajax({
+		url: 'rest/Utils/getDictionary/' + language,
+		type: 'GET',
+		dataType: 'json',
+		success: function(dictionary) {
+			var hairdresser = new Hairdresse(dictionary);
+			hairdresser.showServiceCatalog();
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+	        alert('error: ' + textStatus + ':' + errorThrown);
+	        return null;
+	    }
+	});	
 });
 
 
 // The Hairdresser object and constructor
-function Hairdresse () {
+function Hairdresse (dictionary) {
 	
 	var _$mainDiv = $('#mainDiv');
 	var _newServiceDialog = null;
@@ -18,10 +33,11 @@ function Hairdresse () {
 	var _addServicedialogDiv = null;
 	var _updateServicedialogDiv = null;
 	var _selectedRow = null;
+	var _dictionary = dictionary;
 		
 	this.showServiceCatalog = function() {
 		
-		_$mainDiv.hide();
+		//_$mainDiv.hide();
 		
 		var $table = $('<table></table>').addClass('catalog-table');	
 		var $thead = $('<thead></thead>');
@@ -31,13 +47,13 @@ function Hairdresse () {
 		$table.append($tbody);
 		
 		var $row = $('<tr></tr>').addClass('catalog-head');
-	    var $col = $('<th></th>').addClass('catalog-col').text("Type");
+	    var $col = $('<th></th>').addClass('catalog-col').text(_dictionary.type);
 	    $row.append($col);
-	    $col = $('<th></th>').addClass('catalog-col').text("Category");
+	    $col = $('<th></th>').addClass('catalog-col').text(_dictionary.category);
 	    $row.append($col);
-	    $col = $('<th></th>').addClass('catalog-col').text("Name");
+	    $col = $('<th></th>').addClass('catalog-col').text(_dictionary.name);
 	    $row.append($col);
-	    $col = $('<th></th>').addClass('catalog-col').text("Price");
+	    $col = $('<th></th>').addClass('catalog-col').text(_dictionary.price);
 	    $row.append($col);	
 	    $thead.append($row);
 
@@ -57,7 +73,7 @@ function Hairdresse () {
 			
 		showServiceCatalog(); 	
 		
-		_$mainDiv.fadeIn('slow');
+		//_$mainDiv.fadeIn('slow');
 	};
 	
 	function selectRow(event) {
@@ -230,8 +246,24 @@ function Hairdresse () {
 		});
 	}
 	
+	function getDictionary(language) {
+		$.ajax({
+			url: 'rest/Utils/getDictionary/' + language,
+			type: 'GET',
+			dataType: 'json',
+			data: language,
+			success: function(dictionary) {
+				return dictionary;
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+		        alert('error: ' + textStatus + ':' + errorThrown);
+		        return null;
+		    }
+		});
+	}
+	
 	function refreshServiceCatalog() {
-		_$mainDiv.hide();
+		//_$mainDiv.hide();
 		$('.catalog-table tbody').remove();
 		showServiceCatalog();
 		

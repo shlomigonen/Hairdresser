@@ -1,4 +1,5 @@
+com\fanitoz\hairdresser\Utils.class
 com\fanitoz\hairdresser\Service.class
-com\fanitoz\hairdresser\CreateServices.class
 com\fanitoz\hairdresser\ServiceCatalog.class
+com\fanitoz\hairdresser\CreateServices.class
 com\fanitoz\hairdresser\Main.class

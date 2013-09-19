@@ -30,25 +30,25 @@ function ServiceDialog (div, title, okCallback, cancelCallback) {
 		
 		var table = $('<table></table>').addClass('add-service-table');
 
-		var col = ($('<td></td>').addClass('service-dialog-col')).append($('<label>Type: </label>')); 
+		var col = ($('<td></td>').addClass('service-dialog-col')).append($('<label>' + Utils.dictionary.type + ':</label>')); 
 		var row = $('<tr></tr>').addClass('service-dialog-row').append(col);
 	    col = ($('<td></td>').addClass('service-dialog-col')).append($("<input type='text' id=" + _serviceTypeInputId + ">"));
 	    row.append(col);
 	    table.append(row);
 	    
-	    col = ($('<td></td>').addClass('service-dialog-col')).append($('<label>Category: </label>'));
+	    col = ($('<td></td>').addClass('service-dialog-col')).append($('<label>' + Utils.dictionary.category + ':</label>'));
 	    row = $('<tr></tr>').addClass('service-dialog-row').append(col);
 	    col = ($('<td></td>').addClass('service-dialog-col')).append($("<input type='text' id="+ _serviceCategoryInputId + ">"));
 	    row.append(col);
 	    table.append(row);
 	    
-	    col = ($('<td></td>').addClass('service-dialog-col')).append($('<label>Name: </label>'));
+	    col = ($('<td></td>').addClass('service-dialog-col')).append($('<label>' + Utils.dictionary.name + ':</label>'));
 	    row = $('<tr></tr>').addClass('service-dialog-row').append(col);
 	    col = ($('<td></td>').addClass('service-dialog-col')).append($("<input type='text' id="+ _serviceNameInputId + ">"));
 	    row.append(col);
 	    table.append(row);
 	    
-	    col = ($('<td></td>').addClass('service-dialog-col')).append($('<label>Price: </label>'));
+	    col = ($('<td></td>').addClass('service-dialog-col')).append($('<label>' + Utils.dictionary.price + ':</label>'));
 	    row = $('<tr></tr>').addClass('service-dialog-row').append(col);
 	    col = ($('<td></td>').addClass('service-dialog-col')).append($("<input type='number' id=" + _servicePriceInputId + ">"));
 	    row.append(col);
@@ -65,6 +65,9 @@ function ServiceDialog (div, title, okCallback, cancelCallback) {
 	};
 	
 	function createDialog() {
+		
+		var okButtonLable = Utils.dictionary.ok;
+		var cancelButtonLable = Utils.dictionary.cancel;
 
 		$(_div).attr('title', _title).dialog({
 						        resizable: false,
@@ -72,10 +75,14 @@ function ServiceDialog (div, title, okCallback, cancelCallback) {
 						        width: 270,
 						        modal: true,
 						        autoOpen: false,
-						        buttons: {
-						            "Ok": handleOk,
-						            "Cancel": handleCancel
-						        }
+						        buttons: [ { 
+						            text: Utils.dictionary.ok,
+						            click: handleOk
+						          }, {
+						            text: Utils.dictionary.cancel,
+						            click: handleCancel
+						          }
+						        ]						        
 						    });
 		
 		$(_div).append($("<p id=" + _dialogContentDivId + "></p>"));
