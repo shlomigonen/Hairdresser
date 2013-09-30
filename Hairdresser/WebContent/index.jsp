@@ -11,8 +11,8 @@
 </head>
 
 <!-- To support Right to Left  -->
-<!-- <body dir="rtl">  -->
-<body>
+<body dir="auto"> 
+<!-- <body>  -->
 	<form id="mainForm">
 		<div id="mainDiv">
 		</div>

@@ -39,12 +39,12 @@ public class ServiceCatalog {
 	public ServiceCatalog() {
 		super();
 			
-		context = new ClassPathXmlApplicationContext(new String[] {"com/fanitoz/hairdresser/resources/locale.xml"/*, add more spring files here*/});
+		context = new ClassPathXmlApplicationContext(new String[] {"resources/locale.xml"/*, add more spring files here*/});
 
 		if (serviceRegistry == null && sessionFactory == null) {
 			try {
 				Configuration configuration = new Configuration();
-				configuration.configure();
+				configuration.configure("resources/hibernate.cfg.xml");
 				serviceRegistry = new ServiceRegistryBuilder().applySettings(
 						configuration.getProperties()).buildServiceRegistry();
 				sessionFactory = configuration

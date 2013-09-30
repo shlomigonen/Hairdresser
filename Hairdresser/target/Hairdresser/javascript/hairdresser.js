@@ -4,16 +4,17 @@ $(document).ready(function() {
 	
 	// get the browser locale/language
 	var language = navigator.language;
-		
 	if (typeof navigator.language == "undefined")
 			language = navigator.systemLanguage; // Works for IE only
-	
+	// get dictionary for this language from server
 	$.ajax({
 		url: 'rest/Utils/getDictionary/' + language,
 		type: 'GET',
 		dataType: 'json',
 		success: function(dictionary) {
-			var hairdresser = new Hairdresse(dictionary);
+			Utils.setDictionary(dictionary);
+			// now that we got the settings from the server we can continue
+			var hairdresser = new Hairdresse();
 			hairdresser.showServiceCatalog();
 		},
 		error: function(jqXHR, textStatus, errorThrown){
@@ -25,7 +26,7 @@ $(document).ready(function() {
 
 
 // The Hairdresser object and constructor
-function Hairdresse (dictionary) {
+function Hairdresse() {
 	
 	var _$mainDiv = $('#mainDiv');
 	var _newServiceDialog = null;
@@ -33,7 +34,6 @@ function Hairdresse (dictionary) {
 	var _addServicedialogDiv = null;
 	var _updateServicedialogDiv = null;
 	var _selectedRow = null;
-	var _dictionary = dictionary;
 		
 	this.showServiceCatalog = function() {
 		
@@ -47,27 +47,27 @@ function Hairdresse (dictionary) {
 		$table.append($tbody);
 		
 		var $row = $('<tr></tr>').addClass('catalog-head');
-	    var $col = $('<th></th>').addClass('catalog-col').text(_dictionary.type);
+	    var $col = $('<td></td>').addClass('catalog-col').text(Utils.dictionary.type);
 	    $row.append($col);
-	    $col = $('<th></th>').addClass('catalog-col').text(_dictionary.category);
+	    $col = $('<td></td>').addClass('catalog-col').text(Utils.dictionary.category);
 	    $row.append($col);
-	    $col = $('<th></th>').addClass('catalog-col').text(_dictionary.name);
+	    $col = $('<td></td>').addClass('catalog-col').text(Utils.dictionary.name);
 	    $row.append($col);
-	    $col = $('<th></th>').addClass('catalog-col').text(_dictionary.price);
+	    $col = $('<td></td>').addClass('catalog-col').text(Utils.dictionary.price);
 	    $row.append($col);	
 	    $thead.append($row);
 
 		_$mainDiv.append($table);		
 		
-		var $addButton = $('<input type="submit" value="Add" />');
+		var $addButton = $('<input type="submit" value=' + Utils.dictionary.add_lbl + '>');
 		$addButton.button().click(showAddNewServiceDialog);
 		_$mainDiv.append($addButton);
 		
-		var $updateButton = $('<input type="submit" value="Update" />');
+		var $updateButton = $('<input type="submit" value=' + Utils.dictionary.update_lbl + '>');
 		$updateButton.button().click(showUpdateServiceDialog);
 		_$mainDiv.append($updateButton);
 		
-		var $deleteButton = $('<input type="submit" value="Delete" />');
+		var $deleteButton = $('<input type="submit" value=' + Utils.dictionary.delete_lbl + '>');
 		$deleteButton.button().click(handleDeleteService);
 		_$mainDiv.append($deleteButton);
 			
@@ -88,7 +88,7 @@ function Hairdresse (dictionary) {
 			_addServicedialogDiv = $('<div id="addServiceDialog"></div>').addClass('dialog-div');
 			_$mainDiv.append(_addServicedialogDiv);
 			
-			_newServiceDialog = new ServiceDialog(_addServicedialogDiv, "New Service", handleNewService);
+			_newServiceDialog = new ServiceDialog(_addServicedialogDiv, Utils.dictionary.new_service_header, handleNewService);
 		}
 		
 		_newServiceDialog.open();		
@@ -102,11 +102,11 @@ function Hairdresse (dictionary) {
 			_updateServicedialogDiv = $('<div id="updateServiceDialog"></div>').addClass('dialog-div');
 			_$mainDiv.append(_updateServiceDialog);
 			
-			_updateServiceDialog = new ServiceDialog(_updateServicedialogDiv, "Update Service", handleUpdateService);
+			_updateServiceDialog = new ServiceDialog(_updateServicedialogDiv, Utils.dictionary.update_service_header, handleUpdateService);
 		}
 		
 		if (_selectedRow == null) {
-			alert("Please select a service from the table ane then click on update");
+			alert(Utils.dictionary.select_service_update_msg);
 		}
 		else {
 			_updateServiceDialog.open({	type: $(_selectedRow).find("#serviceType").text(), 
@@ -132,7 +132,7 @@ function Hairdresse (dictionary) {
 
 	function handleDeleteService() {
 		if (_selectedRow == null) {
-			alert("Please select a service from the table ane then click on delete");
+			alert(Utils.dictionary.select_service_delete_msg);
 		}
 		else {
 			// TODO: show a confirmation dialog			

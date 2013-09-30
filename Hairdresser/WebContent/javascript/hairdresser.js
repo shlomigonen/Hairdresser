@@ -47,13 +47,13 @@ function Hairdresse() {
 		$table.append($tbody);
 		
 		var $row = $('<tr></tr>').addClass('catalog-head');
-	    var $col = $('<th></th>').addClass('catalog-col').text(Utils.dictionary.type);
+	    var $col = $('<td></td>').addClass('catalog-col').text(Utils.dictionary.type);
 	    $row.append($col);
-	    $col = $('<th></th>').addClass('catalog-col').text(Utils.dictionary.category);
+	    $col = $('<td></td>').addClass('catalog-col').text(Utils.dictionary.category);
 	    $row.append($col);
-	    $col = $('<th></th>').addClass('catalog-col').text(Utils.dictionary.name);
+	    $col = $('<td></td>').addClass('catalog-col').text(Utils.dictionary.name);
 	    $row.append($col);
-	    $col = $('<th></th>').addClass('catalog-col').text(Utils.dictionary.price);
+	    $col = $('<td></td>').addClass('catalog-col').text(Utils.dictionary.price);
 	    $row.append($col);	
 	    $thead.append($row);
 

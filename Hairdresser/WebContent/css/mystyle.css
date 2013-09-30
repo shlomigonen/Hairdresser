@@ -1,3 +1,9 @@
+/*
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset { 
+    float: none;
+}
+*/
+
 body {
 	font-size: 12px;
 }
@@ -26,8 +32,7 @@ body {
     color: #2779AA;
     font-weight: bold;
     line-height: 14px; 
-    line-height: 25px;
-    text-align: left
+    line-height: 27px;
 }
 
 .catalog-row { 

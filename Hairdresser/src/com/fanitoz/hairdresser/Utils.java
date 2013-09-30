@@ -53,7 +53,7 @@ public class Utils {
 		}
 				
 		try {
-			File file = new File(context.getRealPath("/WEB-INF/classes/com/fanitoz/hairdresser/resources/locale/application/messages_" + javaLocale + ".properties"));
+			File file = new File(context.getRealPath("/WEB-INF/classes/resources/locale/application/messages_" + javaLocale + ".properties"));
 			FileInputStream fileInput = new FileInputStream(file);
 			Properties properties = new Properties();
 			properties.load(new InputStreamReader(fileInput, "UTF-8"));
