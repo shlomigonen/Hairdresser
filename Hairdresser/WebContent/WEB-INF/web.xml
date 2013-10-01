@@ -15,8 +15,11 @@
 	<filter>
 		<filter-name>securityFilter</filter-name>
 		<filter-class>org.apache.shiro.web.servlet.IniShiroFilter</filter-class>
-		<!-- no init-param means load the INI config from classpath:shiro.ini -->
-	</filter>
+<!-- 		<init-param>
+			<param-name>configPath</param-name>
+			<param-value>/WEB-INF/classes/resources/shiro.ini</param-value>
+		</init-param>
+ -->	</filter>
 	<filter-mapping>
 		<filter-name>securityFilter</filter-name>
 		<url-pattern>/*</url-pattern>
